@@ -910,8 +910,12 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
         } else {
             setPaintStyle(Paint.Style.FILL);
 
+            SerializablePaint paint = new SerializablePaint();
+            paint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
+
             DrawMove drawMove = DrawMove.newInstance();
             drawMove.setDrawingMode(DrawingMode.TEXT);
+            drawMove.setPaint(paint);
             drawMove.setText(newText);
             mDrawMoveHistory.add(drawMove);
             mDrawMoveHistoryIndex++;
