@@ -22,7 +22,7 @@ import java.io.IOException;
 
 public class BitmapUtils {
 
-    private static int ivWidth,ivHeight;
+    private static int ivWidth,ivHeight,newWidth,newHeight;
 
     public static Bitmap CreateBitmapMatchesViewSize(View imageViewDest, Bitmap bitmapSrc) {
         int currentBitmapWidth = bitmapSrc.getWidth();
@@ -37,8 +37,8 @@ public class BitmapUtils {
             }
         });
 
-        int newWidth = ivWidth;
-        int newHeight = (int) Math.floor((double) currentBitmapHeight * ((double) newWidth / (double) currentBitmapWidth));
+        newWidth = ivWidth;
+        newHeight = (int) Math.floor((double) currentBitmapHeight * ((double) newWidth / (double) currentBitmapWidth));
 
         return Bitmap.createScaledBitmap(bitmapSrc, newWidth, newHeight, true);
     }
