@@ -908,8 +908,6 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
             mDrawMoveHistory.get(mDrawMoveHistory.size() - 1).setText(newText);
             invalidate();
         } else {
-            setPaintStyle(Paint.Style.FILL);
-
             SerializablePaint paint = new SerializablePaint();
             paint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
 
@@ -921,8 +919,6 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
             mDrawMoveHistoryIndex++;
             invalidate();
             Log.e(TAG, "The last item that you want to refresh text isn't TEXT element.");
-
-            setPaintStyle(Paint.Style.STROKE);
         }
     }
 
