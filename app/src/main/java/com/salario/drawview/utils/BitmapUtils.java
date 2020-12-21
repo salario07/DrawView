@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.salario.drawview.enums.BackgroundType;
 import com.salario.drawview.views.DrawView;
@@ -23,24 +24,31 @@ import java.io.IOException;
 public class BitmapUtils {
 
     private static int ivWidth,ivHeight,newWidth,newHeight;
+    private static BitmapReadyCallback callback;
 
-    public static Bitmap CreateBitmapMatchesViewSize(View imageViewDest, Bitmap bitmapSrc) {
+    public BitmapUtils(BitmapReadyCallback callback) {
+        this.callback = callback;
+    }
+
+    public void CreateBitmapMatchesViewSize(View imageViewDest, Bitmap bitmapSrc) {
         int currentBitmapWidth = bitmapSrc.getWidth();
         int currentBitmapHeight = bitmapSrc.getHeight();
 
-
-        imageViewDest.post(new Runnable() {
+        imageViewDest.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void run() {
+            public void onGlobalLayout() {
+                imageViewDest.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 ivWidth = imageViewDest.getWidth();
                 ivHeight = imageViewDest.getHeight();
+
+                newWidth = ivWidth;
+                newHeight = (int) Math.floor((double) currentBitmapHeight * ((double) newWidth / (double) currentBitmapWidth));
+
+                Bitmap bitmap=Bitmap.createScaledBitmap(bitmapSrc, newWidth, newHeight, true);
+
+                callback.onBitmapReady(bitmap);
             }
         });
-
-        newWidth = ivWidth;
-        newHeight = (int) Math.floor((double) currentBitmapHeight * ((double) newWidth / (double) currentBitmapWidth));
-
-        return Bitmap.createScaledBitmap(bitmapSrc, newWidth, newHeight, true);
     }
 
     public static byte[] GetCompressedImage(Object image, BackgroundType backgroundType, int compressQuality) {
@@ -215,10 +223,9 @@ public class BitmapUtils {
         return inSampleSize;
     }
 
-    public static Bitmap GetBitmapForDrawView(DrawView drawView, Object image, BackgroundType backgroundType, int imageQuality) {
+    public void GetBitmapForDrawView(DrawView drawView, Object image, BackgroundType backgroundType, int imageQuality) {
         byte[] imageInBytes = BitmapUtils.GetCompressedImage(image, backgroundType, imageQuality);
-        return BitmapUtils.CreateBitmapMatchesViewSize(drawView,
-                BitmapFactory.decodeByteArray(imageInBytes, 0, imageInBytes.length));
+        CreateBitmapMatchesViewSize(drawView, BitmapFactory.decodeByteArray(imageInBytes, 0, imageInBytes.length));
     }
 
     public static Bitmap GetCombinedBitmaps(Bitmap bmp1, Bitmap bmp2, int destWidth, int destHeight) {
@@ -227,5 +234,9 @@ public class BitmapUtils {
         canvas.drawBitmap(bmp1, new Matrix(), null);
         canvas.drawBitmap(bmp2, 0, 0, null);
         return bmOverlay;
+    }
+
+    public interface BitmapReadyCallback{
+        void onBitmapReady(Bitmap bitmap);
     }
 }

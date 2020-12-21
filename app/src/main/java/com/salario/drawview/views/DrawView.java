@@ -1219,56 +1219,63 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
                 mDrawMoveHistoryIndex < mDrawMoveHistory.size() - 1)
             mDrawMoveHistory = mDrawMoveHistory.subList(0, mDrawMoveHistoryIndex + 1);
 
-        Bitmap bitmap = BitmapUtils.GetBitmapForDrawView(this, backgroundImage, backgroundType, 50);
-        Matrix matrix = new Matrix();
-        switch (backgroundScale) {
-            case CENTER_CROP:
-                matrix = MatrixUtils.GetCenterCropMatrix(new RectF(0, 0,
-                                bitmap.getWidth(),
-                                bitmap.getHeight()),
-                        new RectF(0, 0, getWidth(), getHeight()));
-                break;
-            case CENTER_INSIDE:
-                matrix.setRectToRect(new RectF(0, 0,
-                                bitmap.getWidth(),
-                                bitmap.getHeight()),
-                        new RectF(0, 0, getWidth(), getHeight()), Matrix.ScaleToFit.CENTER);
-                break;
-            case FIT_XY:
-                matrix.setRectToRect(new RectF(0, 0,
-                                bitmap.getWidth(),
-                                bitmap.getHeight()),
-                        new RectF(0, 0, getWidth(), getHeight()), Matrix.ScaleToFit.FILL);
-                break;
-            case FIT_START:
-                matrix.setRectToRect(new RectF(0, 0,
-                                bitmap.getWidth(),
-                                bitmap.getHeight()),
-                        new RectF(0, 0, getWidth(), getHeight()), Matrix.ScaleToFit.START);
-                break;
-            case FIT_END:
-                matrix.setRectToRect(new RectF(0, 0,
-                                bitmap.getWidth(),
-                                bitmap.getHeight()),
-                        new RectF(0, 0, getWidth(), getHeight()), Matrix.ScaleToFit.END);
-                break;
-        }
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] bitmapArray = byteArrayOutputStream.toByteArray();
-        bitmap.recycle();
+        BitmapUtils bitmapUtils = new BitmapUtils(new BitmapUtils.BitmapReadyCallback() {
+            @Override
+            public void onBitmapReady(Bitmap bitmap) {
+                Matrix matrix = new Matrix();
+                switch (backgroundScale) {
+                    case CENTER_CROP:
+                        matrix = MatrixUtils.GetCenterCropMatrix(new RectF(0, 0,
+                                        bitmap.getWidth(),
+                                        bitmap.getHeight()),
+                                new RectF(0, 0, getWidth(), getHeight()));
+                        break;
+                    case CENTER_INSIDE:
+                        matrix.setRectToRect(new RectF(0, 0,
+                                        bitmap.getWidth(),
+                                        bitmap.getHeight()),
+                                new RectF(0, 0, getWidth(), getHeight()), Matrix.ScaleToFit.CENTER);
+                        break;
+                    case FIT_XY:
+                        matrix.setRectToRect(new RectF(0, 0,
+                                        bitmap.getWidth(),
+                                        bitmap.getHeight()),
+                                new RectF(0, 0, getWidth(), getHeight()), Matrix.ScaleToFit.FILL);
+                        break;
+                    case FIT_START:
+                        matrix.setRectToRect(new RectF(0, 0,
+                                        bitmap.getWidth(),
+                                        bitmap.getHeight()),
+                                new RectF(0, 0, getWidth(), getHeight()), Matrix.ScaleToFit.START);
+                        break;
+                    case FIT_END:
+                        matrix.setRectToRect(new RectF(0, 0,
+                                        bitmap.getWidth(),
+                                        bitmap.getHeight()),
+                                new RectF(0, 0, getWidth(), getHeight()), Matrix.ScaleToFit.END);
+                        break;
+                }
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                byte[] bitmapArray = byteArrayOutputStream.toByteArray();
+                bitmap.recycle();
 
-        mDrawMoveHistory.add(DrawMove.newInstance()
-                .setBackgroundImage(bitmapArray, matrix)
-                .setPaint(new SerializablePaint()));
-        mDrawMoveHistoryIndex++;
+                mDrawMoveHistory.add(DrawMove.newInstance()
+                        .setBackgroundImage(bitmapArray, matrix)
+                        .setPaint(new SerializablePaint()));
+                mDrawMoveHistoryIndex++;
 
-        mDrawMoveBackgroundIndex = mDrawMoveHistoryIndex;
+                mDrawMoveBackgroundIndex = mDrawMoveHistoryIndex;
 
-        if (onDrawViewListener != null)
-            onDrawViewListener.onEndDrawing();
+                if (onDrawViewListener != null)
+                    onDrawViewListener.onEndDrawing();
 
-        invalidate();
+                invalidate();
+
+            }
+        });
+        bitmapUtils.GetBitmapForDrawView(this, backgroundImage, backgroundType, 50);
+        //Bitmap bitmap = BitmapUtils.GetBitmapForDrawView(this, backgroundImage, backgroundType, 50);
 
         return this;
     }
@@ -1281,7 +1288,7 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
      * @param backgroundMatrix Background matrix for the image
      * @return this instance of the view
      */
-    public DrawView setBackgroundImage(@NonNull Object backgroundImage,
+    /*public DrawView setBackgroundImage(@NonNull Object backgroundImage,
                                        @NonNull BackgroundType backgroundType,
                                        @NonNull Matrix backgroundMatrix) {
         if (!(backgroundImage instanceof File) && !(backgroundImage instanceof Bitmap) &&
@@ -1320,7 +1327,7 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
         invalidate();
 
         return this;
-    }
+    }*/
 
     /**
      * Set the max zoom factor of the DrawView
