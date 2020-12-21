@@ -36,6 +36,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import com.salario.drawview.R;
 import com.salario.drawview.dictionaries.DrawMove;
@@ -864,6 +865,9 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
 
     public Object[] createCapture(DrawingCapture drawingCapture, CameraView cameraView) {
         Object[] result = null;
+        SerializablePaint paint = new SerializablePaint();
+        paint.setColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
+        setBackgroundPaint(paint);
         switch (drawingCapture) {
             case BITMAP:
                 result = new Object[2];
