@@ -113,7 +113,7 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
     private DrawingOrientation mInitialDrawingOrientation;
 
     private List<DrawMove> mDrawMoveHistory;// 路径记录
-    private int mDrawMoveHistoryIndex = -1;// 历史路径index
+    private int mDrawMoveHistoryIndex = -2;// 历史路径index
     private int mDrawMoveBackgroundIndex = -1;// background index
 
     private RectF mAuxRect;
