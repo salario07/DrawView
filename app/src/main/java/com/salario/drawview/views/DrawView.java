@@ -798,8 +798,8 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
      * @return if the view can do the undo action
      */
     public boolean canUndo() {
-        return mDrawMoveHistoryIndex > -1 &&
-                mDrawMoveHistory.size() > 0;
+        return mDrawMoveHistoryIndex > 0 &&
+                mDrawMoveHistory.size() > 1;
     }
 
     /**
