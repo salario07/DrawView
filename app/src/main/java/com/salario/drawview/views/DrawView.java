@@ -908,6 +908,16 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
             mDrawMoveHistory.get(mDrawMoveHistory.size() - 1).setText(newText);
             invalidate();
         } else {
+            SerializablePaint paint = new SerializablePaint();
+            paint.setStyle(Paint.Style.FILL);
+
+            DrawMove drawMove = DrawMove.newInstance();
+            drawMove.setDrawingMode(DrawingMode.TEXT);
+            drawMove.setPaint(paint);
+            drawMove.setText(newText);
+            mDrawMoveHistory.add(drawMove);
+            mDrawMoveHistoryIndex++;
+            invalidate();
             Log.e(TAG, "The last item that you want to refresh text isn't TEXT element.");
         }
     }
