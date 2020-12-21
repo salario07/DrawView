@@ -21,12 +21,22 @@ import java.io.IOException;
  */
 
 public class BitmapUtils {
+
+    private static int ivWidth,ivHeight;
+
     public static Bitmap CreateBitmapMatchesViewSize(View imageViewDest, Bitmap bitmapSrc) {
         int currentBitmapWidth = bitmapSrc.getWidth();
         int currentBitmapHeight = bitmapSrc.getHeight();
 
-        int ivWidth = imageViewDest.getWidth();
-        int ivHeight = imageViewDest.getHeight();
+
+        imageViewDest.post(new Runnable() {
+            @Override
+            public void run() {
+                ivWidth = imageViewDest.getWidth();
+                ivHeight = imageViewDest.getHeight();
+            }
+        });
+
         int newWidth = ivWidth;
         int newHeight = (int) Math.floor((double) currentBitmapHeight * ((double) newWidth / (double) currentBitmapWidth));
 
