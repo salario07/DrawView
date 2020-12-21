@@ -843,6 +843,11 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
      */
     public Object[] createCapture(DrawingCapture drawingCapture) {
         Object[] result = null;
+
+        SerializablePaint paint = new SerializablePaint();
+        paint.setColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
+        setBackgroundPaint(paint);
+
         switch (drawingCapture) {
             case BITMAP:
                 result = new Object[2];
@@ -865,9 +870,7 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
 
     public Object[] createCapture(DrawingCapture drawingCapture, CameraView cameraView) {
         Object[] result = null;
-        SerializablePaint paint = new SerializablePaint();
-        paint.setColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
-        setBackgroundPaint(paint);
+
         switch (drawingCapture) {
             case BITMAP:
                 result = new Object[2];
