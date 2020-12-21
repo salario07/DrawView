@@ -113,8 +113,8 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
     private DrawingOrientation mInitialDrawingOrientation;
 
     private List<DrawMove> mDrawMoveHistory;// 路径记录
-    private int mDrawMoveHistoryIndex = -2;// 历史路径index
-    private int mDrawMoveBackgroundIndex = -1;// background index
+    private int mDrawMoveHistoryIndex = -1;// 历史路径index
+    private final int mDrawMoveBackgroundIndex = -1;// background index
 
     private RectF mAuxRect;
     private PorterDuffXfermode mEraserXefferMode;
@@ -455,7 +455,6 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
                 mDrawMoveHistory.add((DrawMove) bundle.getSerializable("mDrawMoveHistory" + i));
             }
             mDrawMoveHistoryIndex = bundle.getInt("mDrawMoveHistoryIndex");
-            mDrawMoveBackgroundIndex = bundle.getInt("mDrawMoveBackgroundIndex");
             mDrawingMode = (DrawingMode) bundle.getSerializable("mDrawingMode");
             mDrawingTool = (DrawingTool) bundle.getSerializable("mDrawingTool");
             mInitialDrawingOrientation = (DrawingOrientation) bundle.getSerializable("mInitialDrawingOrientation");
@@ -712,7 +711,6 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
         if (mDrawMoveHistory != null) {
             mDrawMoveHistory.clear();
             mDrawMoveHistoryIndex = -1;
-            mDrawMoveBackgroundIndex = -1;
             invalidate();
 
             if (onDrawViewListener != null)
@@ -734,12 +732,10 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
                 mDrawMoveHistory.clear();
                 mDrawMoveHistory.add(drawMove);
                 mDrawMoveHistoryIndex = 0;
-                mDrawMoveBackgroundIndex = 0;
                 invalidate();
             } else {
                 mDrawMoveHistory.clear();
                 mDrawMoveHistoryIndex = -1;
-                mDrawMoveBackgroundIndex = -1;
                 invalidate();
             }
 //            if (onDrawViewListener != null)
@@ -778,13 +774,6 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
                 mDrawMoveHistory.size() > 0) {
             mDrawMoveHistoryIndex--;
 
-            mDrawMoveBackgroundIndex = -1;
-            for (int i = 0; i < mDrawMoveHistoryIndex + 1; i++) {
-                if (mDrawMoveHistory.get(i).getBackgroundImage() != null) {
-                    mDrawMoveBackgroundIndex = i;
-                }
-            }
-
             invalidate();
             return true;
         }
@@ -811,7 +800,6 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
         if (mDrawMoveHistoryIndex <= mDrawMoveHistory.size() - 1) {
             mDrawMoveHistoryIndex++;
 
-            mDrawMoveBackgroundIndex = -1;
             /*for (int i = 0; i < mDrawMoveHistoryIndex + 1; i++) {
                 if (mDrawMoveHistory.get(i).getBackgroundImage() != null) {
                     mDrawMoveBackgroundIndex = i;
@@ -1264,8 +1252,6 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
                         .setBackgroundImage(bitmapArray, matrix)
                         .setPaint(new SerializablePaint()));
                 mDrawMoveHistoryIndex++;
-
-                mDrawMoveBackgroundIndex = mDrawMoveHistoryIndex;
 
                 if (onDrawViewListener != null)
                     onDrawViewListener.onEndDrawing();
