@@ -812,11 +812,11 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
             mDrawMoveHistoryIndex++;
 
             mDrawMoveBackgroundIndex = -1;
-            for (int i = 0; i < mDrawMoveHistoryIndex + 1; i++) {
+            /*for (int i = 0; i < mDrawMoveHistoryIndex + 1; i++) {
                 if (mDrawMoveHistory.get(i).getBackgroundImage() != null) {
                     mDrawMoveBackgroundIndex = i;
                 }
-            }
+            }*/
 
             invalidate();
             return true;
