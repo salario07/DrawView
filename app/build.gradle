@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.salario.drawview"
+        //applicationId "com.salario.drawview"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
