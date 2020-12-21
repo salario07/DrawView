@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -906,8 +907,19 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
                 .getDrawingMode() == DrawingMode.TEXT) {
             mDrawMoveHistory.get(mDrawMoveHistory.size() - 1).setText(newText);
             invalidate();
-        } else
+        } else {
+            setPaintStyle(Paint.Style.FILL);
+
+            DrawMove drawMove = DrawMove.newInstance();
+            drawMove.setDrawingMode(DrawingMode.TEXT);
+            drawMove.setText(newText);
+            mDrawMoveHistory.add(drawMove);
+            mDrawMoveHistoryIndex++;
+            invalidate();
             Log.e(TAG, "The last item that you want to refresh text isn't TEXT element.");
+
+            setPaintStyle(Paint.Style.STROKE);
+        }
     }
 
     /**
