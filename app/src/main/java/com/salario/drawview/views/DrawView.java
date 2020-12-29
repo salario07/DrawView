@@ -371,7 +371,7 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
                     lastMoveIndex = mDrawMoveHistory.size() - 1;
 
                     if (mLastTouchEvent == MotionEvent.ACTION_DOWN) {
-                        if (mDrawMoveHistory.size() > 0) {
+                        if (mDrawMoveHistory.size() > 0 && getDrawingMode()!=DrawingMode.TEXT) {
                             mDrawMoveHistory.remove(lastMoveIndex);
                             mDrawMoveHistoryIndex--;
                             lastMoveIndex--;
@@ -903,23 +903,13 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
      * @param newText
      */
     public void refreshLastText(String newText) {
-        if (mDrawMoveHistory.get(mDrawMoveHistory.size() - 1)
-                .getDrawingMode() == DrawingMode.TEXT) {
-            mDrawMoveHistory.get(mDrawMoveHistory.size() - 1).setText(newText);
-            invalidate();
-        } else {
-            SerializablePaint paint = new SerializablePaint();
-            paint.setStyle(Paint.Style.FILL);
+        SerializablePaint paint = new SerializablePaint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(ContextCompat.getColor(getContext(),android.R.color.holo_red_dark));
+        paint.setTextSize(60);
 
-            DrawMove drawMove = DrawMove.newInstance();
-            drawMove.setDrawingMode(DrawingMode.TEXT);
-            drawMove.setPaint(paint);
-            drawMove.setText(newText);
-            mDrawMoveHistory.add(drawMove);
-            mDrawMoveHistoryIndex++;
-            invalidate();
-            Log.e(TAG, "The last item that you want to refresh text isn't TEXT element.");
-        }
+        mDrawMoveHistory.get(mDrawMoveHistory.size() - 1).setPaint(paint).setText(newText);
+        invalidate();
     }
 
     public void addText(String newText){
