@@ -259,7 +259,8 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
                         break;
                     case TEXT:
                         if (drawMove.getText() != null && !drawMove.getText().equals("")) {
-                            mContentCanvas.drawText(drawMove.getText(), drawMove.getEndX(), drawMove.getEndY(), drawMove.getPaint());
+                            //mContentCanvas.drawText(drawMove.getText(), drawMove.getEndX(), drawMove.getEndY(), drawMove.getPaint());
+                            drawText(drawMove.getText(),drawMove.getEndY(),drawMove.getPaint());
                         }
                         break;
                     case ERASER:
@@ -912,18 +913,23 @@ public class DrawView extends FrameLayout implements View.OnTouchListener {
         invalidate();
     }
 
-    public void addText(String newText){
-        SerializablePaint paint = new SerializablePaint();
-        paint.setStyle(Paint.Style.FILL);
-
-        DrawMove drawMove = DrawMove.newInstance();
-        drawMove.setDrawingMode(DrawingMode.TEXT);
-        drawMove.setPaint(paint);
-        drawMove.setText(newText);
-        mDrawMoveHistory.add(drawMove);
-        mDrawMoveHistoryIndex++;
-        invalidate();
-        Log.e(TAG, "The last item that you want to refresh text isn't TEXT element.");
+    private void drawText(String text,float entryY, SerializablePaint paint){
+        //this method avoid drawing text out of screen
+        int limit = 33, lineSpacing =55, leftPadding =16;
+        if (text.length()<limit){
+            mContentCanvas.drawText(text, 16, entryY, paint);
+        }else {
+            int lines = (text.length()/limit)+1;
+            for (int i = 0; i < lines ; i++) {
+                String shortText;
+                if (lines!=i+1){
+                    shortText = text.substring(limit*i,limit*(i+1));
+                }else {
+                    shortText = text.substring(limit*i);
+                }
+                mContentCanvas.drawText(shortText, leftPadding, entryY+(i*lineSpacing), paint);
+            }
+        }
     }
 
     /**
